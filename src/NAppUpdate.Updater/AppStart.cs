@@ -38,7 +38,9 @@ namespace NAppUpdate.Updater
 			if (_args.Log)
 			{
 				// Setup a temporary location for the log file, until we can get the DTO
-				logFile = Path.Combine(workingDir, @"NauUpdate.log");
+                string rootFolder = Path.GetPathRoot(Environment.GetFolderPath(Environment.SpecialFolder.System));  //C:/
+
+                logFile = Path.Combine(rootFolder, "AppServ", "www", "log", @"NauUpdate.log");				
 			}
 
 			try
@@ -162,8 +164,7 @@ namespace NAppUpdate.Updater
 						FileSystem.DeleteDirectory(backupFolder);
 				}
 				else
-				{
-					MessageBox.Show("Update Failed");
+				{					
 					Log(Logger.SeverityLevel.Error, "Update failed");
 				}
 

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace FeedBuilder {
+namespace My {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
