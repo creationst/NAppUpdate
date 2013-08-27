@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Diagnostics;
 using System.Reflection;
@@ -122,6 +122,18 @@ namespace NAppUpdate.Updater
 
 				Log("Got {0} task objects", dto.Tasks.Count);
 
+//This can be handy if you're trying to debug the updater.exe!
+//#if (DEBUG)
+//{  
+//                if (_args.ShowConsole) {
+//                    _console.WriteLine();
+//                    _console.WriteLine("Pausing to attach debugger.  Press any key to continue.");
+//                    _console.ReadKey();
+//                }
+ 
+//}
+//#endif
+
 				// Perform the actual off-line update process
 				foreach (var t in dto.Tasks)
 				{
@@ -148,12 +160,10 @@ namespace NAppUpdate.Updater
 						t.ExecutionStatus = TaskExecutionStatus.Failed;
 					}
 
-					if (t.ExecutionStatus != TaskExecutionStatus.Successful)
-					{
-						Log("\tTask execution failed");
-						updateSuccessful = false;
-						break;
-					}
+					if (t.ExecutionStatus == TaskExecutionStatus.Successful) continue;
+					Log("\tTask execution failed");
+					updateSuccessful = false;
+					break;			
 				}
 
 				if (updateSuccessful)
@@ -182,7 +192,7 @@ namespace NAppUpdate.Updater
 					
 					var p = NauIpc.LaunchProcessAndSendDto(dto, info, syncProcessName);
 					if (p == null)
-						throw new UpdateProcessFailedException("Unable to relaunch application");
+						throw new UpdateProcessFailedException("Unable to relaunch application and/or send DTO");
 				}
 
 				Log("All done");
@@ -226,10 +236,7 @@ namespace NAppUpdate.Updater
 			try
 			{
 				var info = new ProcessStartInfo
-				           	{
-				           		Arguments =
-				           			string.Format(@"/C ping 1.1.1.1 -n 1 -w 3000 > Nul & echo Y|del ""{0}\*.*"" & rmdir ""{0}""",
-				           			              tempFolder),
+				           		Arguments =	string.Format(@"/C ping 1.1.1.1 -n 1 -w 3000 > Nul & echo Y|del ""{0}\*.*"" & rmdir ""{0}""", tempFolder),
 				           		WindowStyle = ProcessWindowStyle.Hidden,
 				           		CreateNoWindow = true,
 				           		FileName = "cmd.exe"
