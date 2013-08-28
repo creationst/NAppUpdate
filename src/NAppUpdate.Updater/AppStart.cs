@@ -235,8 +235,8 @@ namespace NAppUpdate.Updater
 			Log("Removing updater and temp folder... {0}", tempFolder);
 			try
 			{
-				var info = new ProcessStartInfo
-				           		Arguments =	string.Format(@"/C ping 1.1.1.1 -n 1 -w 3000 > Nul & echo Y|del ""{0}\*.*"" & rmdir ""{0}""", tempFolder),
+				var info = new ProcessStartInfo	{
+                                Arguments =	string.Format(@"/C ping 1.1.1.1 -n 1 -w 3000 > Nul & echo Y|del ""{0}\*.*"" & rmdir ""{0}""", tempFolder),
 				           		WindowStyle = ProcessWindowStyle.Hidden,
 				           		CreateNoWindow = true,
 				           		FileName = "cmd.exe"
